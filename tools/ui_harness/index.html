@@ -3,12 +3,63 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SPL Scratchbook local UI harness</title>
+  <title>SPL Scratchbook synthetic showcase</title>
   <link rel="stylesheet" href="../../appserver/static/css/spl_scratchbook_102.css" />
-  <style>html,body{margin:0;background:#f2f4f5}.harness-note{margin:0;padding:7px 12px;border-bottom:1px solid #c3cbd4;background:#fff;color:#5f6b76;font:12px Arial,sans-serif}</style>
+  <style>
+    html,body{margin:0;background:#f2f4f5}
+    .harness-note{margin:0;padding:8px 12px;border-bottom:1px solid #c3cbd4;background:#fff;color:#5f6b76;font:12px Arial,sans-serif}
+  </style>
+  <script>
+    sessionStorage.clear();
+    localStorage.removeItem('spl_scratchbook.local.v1');
+    window.confirm = () => true;
+
+    class MockResultsModel {
+      constructor() {
+        this.handlers = {};
+        this.payload = {
+          fields: ['host', 'status', 'events', 'last_seen'],
+          rows: [
+            ['demo-web-01', 'healthy', '1842', '2026-08-27 09:31:00'],
+            ['demo-indexer-01', 'healthy', '973', '2026-08-27 09:30:58'],
+            ['demo-forwarder-02', 'warning', '216', '2026-08-27 09:30:41'],
+            ['demo-api-01', 'healthy', '128', '2026-08-27 09:30:37']
+          ]
+        };
+      }
+      on(event, handler) { this.handlers[event] = handler; }
+      fetch() {
+        setTimeout(() => {
+          if (this.handlers.data) this.handlers.data.call(this);
+        }, 100);
+      }
+      data() { return this.payload; }
+    }
+
+    class MockSearchManager {
+      constructor() {
+        this.handlers = {};
+        this.results = new MockResultsModel();
+      }
+      on(event, handler) { this.handlers[event] = handler; }
+      data() { return this.results; }
+      startSearch() {
+        if (this.handlers['search:start']) this.handlers['search:start']();
+        setTimeout(() => {
+          if (this.handlers['search:done']) this.handlers['search:done']();
+        }, 120);
+      }
+      cancel() {
+        if (this.handlers['search:cancelled']) this.handlers['search:cancelled']();
+      }
+      dispose() {}
+    }
+
+    window.splunkjs = { mvc: { SearchManager: MockSearchManager } };
+  </script>
 </head>
 <body>
-  <p class="harness-note">Local visual harness only. Search dispatch is available after the packaged app is installed in Splunk.</p>
+  <p class="harness-note">Synthetic demonstration data — no live Splunk events, users, hosts, or credentials.</p>
   <main id="sn-app" class="sn-app" aria-label="SPL Scratchbook">
     <header class="sn-header">
       <div class="sn-title-group"><h1>SPL Scratchbook</h1><span id="sn-global-status" class="sn-global-status" role="status" aria-live="polite">Ready.</span></div>
@@ -21,5 +72,36 @@
     <button id="sn-add-last" type="button" class="sn-add-last">+ Search</button>
   </main>
   <script src="../../appserver/static/js/spl_scratchbook_102.js"></script>
+  <script>
+    const wait = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
+    window.addEventListener('load', async () => {
+      await wait(120);
+      let cells = document.querySelectorAll('[data-cell-id]');
+      const firstEditor = cells[0].querySelector('.sn-editor');
+      firstEditor.value = 'index=demo_metrics status=* | stats count as events latest(_time) as last_seen by host status | sort - events';
+      firstEditor.dispatchEvent(new Event('input', { bubbles: true }));
+      const firstPreset = cells[0].querySelector('[data-field="timePreset"]');
+      firstPreset.value = 'last_60m';
+      firstPreset.dispatchEvent(new Event('change', { bubbles: true }));
+      cells[0].querySelector('[data-action="run"]').click();
+      await wait(450);
+
+      cells = document.querySelectorAll('[data-cell-id]');
+      cells[0].querySelector('[data-action="add-below"]').click();
+      await wait(100);
+      cells = document.querySelectorAll('[data-cell-id]');
+      const secondEditor = cells[1].querySelector('.sn-editor');
+      secondEditor.value = 'index=demo_security severity=high | stats count by rule_name | sort - count';
+      secondEditor.dispatchEvent(new Event('input', { bubbles: true }));
+      cells[1].querySelector('[data-action="toggle-collapse"]').click();
+      await wait(100);
+
+      if (new URLSearchParams(location.search).get('mode') === 'collapsed') {
+        document.querySelectorAll('[data-cell-id]')[0].querySelector('[data-action="toggle-collapse"]').click();
+        await wait(100);
+      }
+      document.body.dataset.showcaseReady = 'true';
+    });
+  </script>
 </body>
 </html>

@@ -2,6 +2,16 @@
 
 SPL Scratchbook is a standalone Splunk Enterprise app for building, formatting, running, and comparing multiple independent SPL searches on one page. It keeps each search beside its results so exploratory work does not require a growing set of Search & Reporting tabs.
 
+## Screenshots
+
+![Expanded SPL Scratchbook Search Cell with synthetic results](docs/images/spl-scratchbook-expanded.png)
+
+*An expanded Search Cell with formatted SPL, a time preset, and synthetic table results. The second Search Cell is collapsed.*
+
+![Two collapsed SPL Scratchbook Search Cells](docs/images/spl-scratchbook-collapsed.png)
+
+*Two Search Cells collapsed into compact SPL-preview rows. All screenshot data is synthetic.*
+
 ## Capabilities
 
 - Stack up to 20 independent SPL cells.
@@ -92,6 +102,7 @@ Developed and validated against Splunk Enterprise 10.4.1. The app uses the Class
 ├── default/data/ui/views/scratchbook.xml
 ├── metadata/default.meta
 ├── CHANGELOG.md
+├── docs/images/
 ├── runbooks/deployment.md
 ├── tools/test_spl_scratchbook.js
 ├── tools/verify_and_package.py

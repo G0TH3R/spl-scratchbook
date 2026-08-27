@@ -160,7 +160,7 @@ def main() -> None:
 
     scanned = []
     for path in APP.rglob("*"):
-        if not path.is_file() or path.stat().st_size > 1_000_000 or any(part in {".git", "dist"} for part in path.relative_to(APP).parts):
+        if not path.is_file() or path.stat().st_size > 1_000_000 or path.suffix.lower() in {".png", ".jpg", ".jpeg", ".gif", ".webp", ".tgz"} or any(part in {".git", "dist"} for part in path.relative_to(APP).parts):
             continue
         body = text(path)
         for name, pattern in SECRET_PATTERNS.items():
