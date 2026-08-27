@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SPL Scratchbook local UI harness</title>
+  <link rel="stylesheet" href="../../appserver/static/css/spl_scratchbook_102.css" />
+  <style>html,body{margin:0;background:#f2f4f5}.harness-note{margin:0;padding:7px 12px;border-bottom:1px solid #c3cbd4;background:#fff;color:#5f6b76;font:12px Arial,sans-serif}</style>
+</head>
+<body>
+  <p class="harness-note">Local visual harness only. Search dispatch is available after the packaged app is installed in Splunk.</p>
+  <main id="sn-app" class="sn-app" aria-label="SPL Scratchbook">
+    <header class="sn-header">
+      <div class="sn-title-group"><h1>SPL Scratchbook</h1><span id="sn-global-status" class="sn-global-status" role="status" aria-live="polite">Ready.</span></div>
+      <div class="sn-header-actions">
+        <button id="sn-add-cell" type="button" class="sn-button sn-button-primary">+ Search</button><button id="sn-run-all" type="button" class="sn-button">Run all</button><button id="sn-clear-results" type="button" class="sn-button sn-button-quiet">Clear</button>
+        <details class="sn-notebook-menu"><summary class="sn-button">Scratchbook</summary><div class="sn-notebook-menu-panel"><label class="sn-checkbox"><input id="sn-remember" type="checkbox" /> Remember search text on this browser</label><span id="sn-storage-note">Search text is kept only for this browser tab.</span><button id="sn-clear-storage" type="button" class="sn-link-button">Reset scratchbook</button><small>Searches use your Splunk permissions. Potential write or action commands require confirmation.</small></div></details>
+      </div>
+    </header>
+    <section id="sn-cells" class="sn-cells" aria-label="Search cells"></section>
+    <button id="sn-add-last" type="button" class="sn-add-last">+ Search</button>
+  </main>
+  <script src="../../appserver/static/js/spl_scratchbook_102.js"></script>
+</body>
+</html>

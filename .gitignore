@@ -1,0 +1,26 @@
+# Generated packages and reports
+dist/
+
+# Python / test caches
+__pycache__/
+.pytest_cache/
+*.pyc
+
+# Local editor and OS files
+.DS_Store
+.vscode/
+.idea/
+
+# Secrets and credentials
+.env
+*.env
+*.token
+*.key
+*.pem
+*credential*
+*credentials*
+
+# Raw or sensitive data
+exports/
+raw-data/
+*.log
